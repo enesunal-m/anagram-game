@@ -6,12 +6,12 @@
         <h2>Score: {{ score }}</h2>
         <h2>Anagrams Left: {{ anagramsLeft }}</h2>
         <input v-model="userInput" @keyup.enter="checkAnagram" type="text" />
-        <button @click="endGame">End Game</button>
+        <button @click="checkAnagram">Enter</button>
     </div>
 </template>
 
 <script>
-import { getAnagrams } from '../utils/anagrams'; // You need to implement these functions
+import { getAnagrams } from '../utils/anagrams';
 import { generateWord } from '../utils/words'
 
 export default {
@@ -41,13 +41,9 @@ export default {
                 }
             }
         },
-        newWord() {
-            this.currentWord = generateWord(this.wordLength);
-            this.anagrams = getAnagrams(this.currentWord);
-        },
-        endGame() {
-            clearInterval(this.timer);
-            this.$emit('end', this.score);
+        async newWord() {
+            this.currentWord = await generateWord(this.wordLength);
+            this.anagrams = await getAnagrams(this.currentWord);
         },
     },
     mounted() {

@@ -1,18 +1,12 @@
-export function getAnagrams(word) {
-  const results = [];
-  const characters = word.split('');
-  generatePermutations(characters, '', results);
-  return results;
-}
-
-function generatePermutations(chars, currentWord, results) {
-  if (chars.length === 0) {
-    results.push(currentWord);
-    return;
+export async function getAnagrams(word) {
+  const response = await fetch('/data/anagrams.json');
+  const data = await response.json();
+  const wordLength = word.length;
+  const wordGroups = data[wordLength];
+  for (let group of wordGroups) {
+    if (group.includes(word)) {
+      return group.filter(anagram => anagram !== word);
+    }
   }
-  for (let i = 0; i < chars.length; i++) {
-    const newChars = [...chars];
-    newChars.splice(i, 1);
-    generatePermutations(newChars, currentWord + chars[i], results);
-  }
+  return [];
 }
